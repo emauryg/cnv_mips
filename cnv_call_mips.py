@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import argparse
 import copy
 import time
@@ -56,15 +54,20 @@ def run_mips(args):
 
 
     ## Iterate through subjects and use the other subjects as a panel of normals
+    ## choose the mip ids corresponding to one subjects (1)
+    ## choose the mip ids corresponding to other subjects (2)
+    ## get the path to the bams of (1)
+    ## get the path fo the bams of (2)
+    ## Run cnvkit command
 
 
     for i in range(len(subjects)):
-    case_mip_ids = sample_table.mipID[sample_table.subject==subjects[i]].values
-    control_mip_ids = sample_table.mipID[sample_table.subject!=subjects[i]].values
-    cases = list(mapping_mip_path.get(str(key)) for key in case_mip_ids)
-    controls = list(mapping_mip_path.get(key) for key in control_mip_ids)
-    cmd = "cnvkit.py batch {} --normal {} --targets {} --fasta {} --output-reference {} --output-dir {}".format(" ".join(cases), " ".join(controls), bait_bed, fasta_ref, "my_reference.cnn",outdir)
-    os.system(cmd)
+        case_mip_ids = sample_table.mipID[sample_table.subject==subjects[i]].values
+        control_mip_ids = sample_table.mipID[sample_table.subject!=subjects[i]].values
+        cases = list(mapping_mip_path.get(str(key)) for key in case_mip_ids)
+        controls = list(mapping_mip_path.get(key) for key in control_mip_ids)
+        cmd = "cnvkit.py batch {} --normal {} --targets {} --fasta {} --output-reference {} --output-dir {}".format(" ".join(cases), " ".join(controls), bait_bed, fasta_ref, "my_reference.cnn",outdir)
+        os.system(cmd)
 
     mssg = "Processing completed!!"
     return(mssg) 
