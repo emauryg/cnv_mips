@@ -23,6 +23,10 @@ Please read their github for other R and python dependencies.
 
 `wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/refFlat.txt.gz`
 
+Note that this refFlat file would be in hg19 format, so if your data is in other reference genome, then it might not work.
+
 
 ## Running the cnv calling with mips data
-`python cnv_call_mips.py -bam_dir <bam_directory> -fasta_ref <fasta_path> -bait <bed_path> -out_dir <output_directory> -sample_table <table_with_mipID_and_subjectnames>`
+`python cnv_call_mips.py -bam_dir <bam_directory> -fasta_ref <fasta_path> -bait <bed_path> -out_dir <output_directory> -sample_table <table_with_mipID_and_subjectnames> -refFlat <path_refFlat.txt>`
+
+In the above script `-refFlat` can be left out empty, and is optional. 

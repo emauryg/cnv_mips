@@ -1,4 +1,5 @@
 import argparse
+import json
 import copy
 import time
 import pandas as pd
@@ -16,8 +17,11 @@ def parse_args():
         help="directory with the bam files")
     parser.add_argument('-fasta_ref', type=str, help="fasta file path")
     parser.add_argument('-bait', type=str, help="capture bait bed file")
-    parser.add_argument('-out_dir', type=str,default="./cnvkit_output/" help="output directory")
+    parser.add_argument('-out_dir', type=str,default="./cnvkit_output/", help="output directory")
     parser.add_argument('-sample_table',type=str, help="list that maps bam names to subject names")
+    parser.add_argument('-refFlat', type=str,default="", help="Annotion files from UCSC website")
+
+    return(parser.parse_args())
 
 def run_mips(args):
 
@@ -34,6 +38,7 @@ def run_mips(args):
     bait_bed = args.bait
     outdir = args.out_dir
     sample_table_path = args.sample_table
+    refFlat = args.refFlat
 
 
     ## Get the bam file paths and extract the mip id
@@ -66,7 +71,10 @@ def run_mips(args):
         control_mip_ids = sample_table.mipID[sample_table.subject!=subjects[i]].values
         cases = list(mapping_mip_path.get(str(key)) for key in case_mip_ids)
         controls = list(mapping_mip_path.get(key) for key in control_mip_ids)
-        cmd = "cnvkit.py batch {} --normal {} --targets {} --fasta {} --output-reference {} --output-dir {}".format(" ".join(cases), " ".join(controls), bait_bed, fasta_ref, "my_reference.cnn",outdir)
+        if (refFlat == ""):
+            cmd = "cnvkit.py batch {} --normal {} --targets {} --fasta {} --output-reference {} --output-dir {}".format(" ".join(cases), " ".join(controls), bait_bed, fasta_ref, "my_reference.cnn",outdir)
+        else:
+            cmd = "cnvkit.py batch {} --normal {} --targets {} --fasta {} --output-reference {} --output-dir {} --annotate {}".format(" ".join(cases), " ".join(controls), bait_bed, fasta_ref, "my_reference.cnn",outdir,refFlat)
         os.system(cmd)
 
     mssg = "Processing completed!!"
@@ -75,9 +83,9 @@ def run_mips(args):
 
 if __name__ == '__main__':
     args = parse_args()
-
     if args.bam_dir[-1] != "/":
         args.bam_dir += "/"
+
     if args.out_dir[-1] != "/":
         args.out_dir += "/"
 
