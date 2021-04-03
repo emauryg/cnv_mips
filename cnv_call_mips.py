@@ -45,8 +45,9 @@ def run_mips(args):
     ## Note this part might be project specific since it depends on naming convention
     f = glob.glob(bam_dir+"*.bam")
     bam_names = list(map(lambda st: str.replace(st, bam_dir,""), f))
-    mip_name = list(map(lambda st: str.split(st,"_")[2],bam_names))
-    mip_name = list(map(lambda st: str.replace(st, "JS-",""), mip_name))
+    # mip_name = list(map(lambda st: str.split(st,"_")[2],bam_names))
+    # mip_name = list(map(lambda st: str.replace(st, "JS-",""), mip_name))
+    mip_name = list(map(lambda st: str.replace(st,".bam",""),bam_names))
 
     ## generate dictionary mapping the mips name to the bam file location for easy access
     mapping_mip_path = dict(zip(mip_name,f))
